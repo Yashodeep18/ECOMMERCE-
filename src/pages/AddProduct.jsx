@@ -15,6 +15,15 @@ function AddProduct() {
   })
   const [errors, setErrors] = useState({})
 
+  // Fallback inline styles for custom colors
+  const colors = {
+    primary: '#1d4ed8',
+    primaryForeground: '#ffffff',
+    secondary: '#6b7280', // Example secondary color (gray-500)
+    secondaryForeground: '#ffffff',
+    destructive: '#dc2626', // red-600 for errors
+  }
+
   const validateForm = () => {
     const newErrors = {}
     if (!formData.title.trim()) newErrors.title = 'Title is required'
@@ -54,10 +63,12 @@ function AddProduct() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">Add New Product</h1>
+      <h1 className="text-3xl font-bold mb-8" style={{ color: colors.primary }}>
+        Add New Product
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-2">
+          <label htmlFor="title" className="block text-sm font-medium mb-2" style={{ color: colors.secondary }}>
             Title
           </label>
           <input
@@ -66,17 +77,18 @@ function AddProduct() {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-md ${
-              errors.title ? 'border-destructive' : ''
-            }`}
+            className="w-full px-4 py-2 border rounded-md"
+            style={{
+              borderColor: errors.title ? colors.destructive : '#d1d5db' // default border gray-300
+            }}
           />
           {errors.title && (
-            <p className="mt-1 text-sm text-destructive">{errors.title}</p>
+            <p className="mt-1 text-sm" style={{ color: colors.destructive }}>{errors.title}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="price" className="block text-sm font-medium mb-2">
+          <label htmlFor="price" className="block text-sm font-medium mb-2" style={{ color: colors.secondary }}>
             Price
           </label>
           <input
@@ -86,17 +98,18 @@ function AddProduct() {
             value={formData.price}
             onChange={handleChange}
             step="0.01"
-            className={`w-full px-4 py-2 border rounded-md ${
-              errors.price ? 'border-destructive' : ''
-            }`}
+            className="w-full px-4 py-2 border rounded-md"
+            style={{
+              borderColor: errors.price ? colors.destructive : '#d1d5db'
+            }}
           />
           {errors.price && (
-            <p className="mt-1 text-sm text-destructive">{errors.price}</p>
+            <p className="mt-1 text-sm" style={{ color: colors.destructive }}>{errors.price}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium mb-2">
+          <label htmlFor="description" className="block text-sm font-medium mb-2" style={{ color: colors.secondary }}>
             Description
           </label>
           <textarea
@@ -105,17 +118,18 @@ function AddProduct() {
             value={formData.description}
             onChange={handleChange}
             rows="4"
-            className={`w-full px-4 py-2 border rounded-md ${
-              errors.description ? 'border-destructive' : ''
-            }`}
+            className="w-full px-4 py-2 border rounded-md"
+            style={{
+              borderColor: errors.description ? colors.destructive : '#d1d5db'
+            }}
           />
           {errors.description && (
-            <p className="mt-1 text-sm text-destructive">{errors.description}</p>
+            <p className="mt-1 text-sm" style={{ color: colors.destructive }}>{errors.description}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-sm font-medium mb-2">
+          <label htmlFor="category" className="block text-sm font-medium mb-2" style={{ color: colors.secondary }}>
             Category
           </label>
           <select
@@ -123,9 +137,10 @@ function AddProduct() {
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-md ${
-              errors.category ? 'border-destructive' : ''
-            }`}
+            className="w-full px-4 py-2 border rounded-md"
+            style={{
+              borderColor: errors.category ? colors.destructive : '#d1d5db'
+            }}
           >
             <option value="">Select a category</option>
             <option value="electronics">Electronics</option>
@@ -134,12 +149,12 @@ function AddProduct() {
             <option value="women's clothing">Women's Clothing</option>
           </select>
           {errors.category && (
-            <p className="mt-1 text-sm text-destructive">{errors.category}</p>
+            <p className="mt-1 text-sm" style={{ color: colors.destructive }}>{errors.category}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="image" className="block text-sm font-medium mb-2">
+          <label htmlFor="image" className="block text-sm font-medium mb-2" style={{ color: colors.secondary }}>
             Image URL
           </label>
           <input
@@ -148,30 +163,39 @@ function AddProduct() {
             name="image"
             value={formData.image}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-md ${
-              errors.image ? 'border-destructive' : ''
-            }`}
+            className="w-full px-4 py-2 border rounded-md"
+            style={{
+              borderColor: errors.image ? colors.destructive : '#d1d5db'
+            }}
           />
           {errors.image && (
-            <p className="mt-1 text-sm text-destructive">{errors.image}</p>
+            <p className="mt-1 text-sm" style={{ color: colors.destructive }}>{errors.image}</p>
           )}
         </div>
 
         {errors.submit && (
-          <p className="text-sm text-destructive">{errors.submit}</p>
+          <p className="text-sm" style={{ color: colors.destructive }}>{errors.submit}</p>
         )}
 
         <div className="flex gap-4">
           <button
             type="submit"
-            className="bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
+            className="px-6 py-2 rounded-md hover:bg-opacity-90 transition-colors"
+            style={{
+              backgroundColor: colors.primary,
+              color: colors.primaryForeground,
+            }}
           >
             Add Product
           </button>
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="bg-secondary text-secondary-foreground px-6 py-2 rounded-md hover:bg-secondary/90 transition-colors"
+            className="px-6 py-2 rounded-md hover:bg-opacity-90 transition-colors"
+            style={{
+              backgroundColor: colors.secondary,
+              color: colors.secondaryForeground,
+            }}
           >
             Cancel
           </button>
@@ -181,4 +205,4 @@ function AddProduct() {
   )
 }
 
-export default AddProduct 
+export default AddProduct

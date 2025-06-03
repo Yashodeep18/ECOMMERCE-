@@ -29,76 +29,141 @@ function ProductList() {
   }
 
   if (status === 'loading') {
-    return <div className="text-center">Loading...</div>
+    return <div style={{ textAlign: 'center', marginTop: '2rem' }}>Loading...</div>
   }
 
   if (status === 'failed') {
-    return <div className="text-center text-red-500">Error: {error}</div>
+    return (
+      <div style={{ textAlign: 'center', marginTop: '2rem', color: 'red' }}>
+        Error: {error}
+      </div>
+    )
   }
 
   return (
-    <div>
-      <div className="mb-8 space-y-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            placeholder="Search products..."
-            onChange={handleSearchChange}
-            className="flex-1 px-4 py-2 border rounded-md"
-          />
-          <select
-            onChange={handleCategoryChange}
-            className="px-4 py-2 border rounded-md"
-          >
-            <option value="">All Categories</option>
-            <option value="electronics">Electronics</option>
-            <option value="jewelery">Jewelery</option>
-            <option value="men's clothing">Men's Clothing</option>
-            <option value="women's clothing">Women's Clothing</option>
-          </select>
-          <select
-            onChange={handlePriceRangeChange}
-            className="px-4 py-2 border rounded-md"
-          >
-            <option value="0,1000">All Prices</option>
-            <option value="0,50">Under $50</option>
-            <option value="50,100">$50 - $100</option>
-            <option value="100,500">$100 - $500</option>
-            <option value="500,1000">$500+</option>
-          </select>
+    <>
+      {/* Internal CSS for colors */}
+      <style>{`
+        .text-primary {
+          color: #3182ce; /* blue-600 */
+          font-weight: 700;
+        }
+        .text-muted {
+          color: #718096; /* gray-600 */
+        }
+        .border-rounded {
+          border-radius: 0.5rem; /* rounded-lg */
+          border: 1px solid #e2e8f0; /* gray-300 */
+        }
+        .hover-scale:hover {
+          transform: scale(1.05);
+          transition: transform 0.3s ease;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;  
+          overflow: hidden;
+        }
+      `}</style>
+
+      <div>
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+            <input
+              type="text"
+              placeholder="Search products..."
+              onChange={handleSearchChange}
+              style={{
+                flex: 1,
+                padding: '0.5rem 1rem',
+                border: '1px solid #e2e8f0',
+                borderRadius: '0.375rem',
+              }}
+            />
+            <select
+              onChange={handleCategoryChange}
+              style={{
+                padding: '0.5rem 1rem',
+                border: '1px solid #e2e8f0',
+                borderRadius: '0.375rem',
+              }}
+            >
+              <option value="">All Categories</option>
+              <option value="electronics">Electronics</option>
+              <option value="jewelery">Jewelery</option>
+              <option value="men's clothing">Men's Clothing</option>
+              <option value="women's clothing">Women's Clothing</option>
+            </select>
+            <select
+              onChange={handlePriceRangeChange}
+              style={{
+                padding: '0.5rem 1rem',
+                border: '1px solid #e2e8f0',
+                borderRadius: '0.375rem',
+              }}
+            >
+              <option value="0,1000">All Prices</option>
+              <option value="0,50">Under $50</option>
+              <option value="50,100">$50 - $100</option>
+              <option value="100,500">$100 - $500</option>
+              <option value="500,1000">$500+</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill,minmax(250px,1fr))',
+            gap: '1.5rem',
+          }}
+        >
+          {products.map((product) => (
+            <Link
+              key={product.id}
+              to={`/product/${product.id}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              className="group"
+            >
+              <div className="border-rounded hover-scale" style={{ overflow: 'hidden' }}>
+                <div
+                  style={{
+                    position: 'relative',
+                    paddingTop: '100%', // 1:1 aspect ratio
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      padding: '1rem',
+                    }}
+                  />
+                </div>
+                <div style={{ padding: '1rem' }}>
+                  <h3 className="line-clamp-2" style={{ fontWeight: '600', fontSize: '1.125rem', marginBottom: '0.5rem' }}>
+                    {product.title}
+                  </h3>
+                  <p className="text-primary">${product.price}</p>
+                  <p className="text-muted" style={{ textTransform: 'capitalize', fontSize: '0.875rem' }}>
+                    {product.category}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <Link
-            key={product.id}
-            to={`/product/${product.id}`}
-            className="group"
-          >
-            <div className="border rounded-lg overflow-hidden transition-transform hover:scale-105">
-              <div className="aspect-square relative">
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="object-contain w-full h-full p-4"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                  {product.title}
-                </h3>
-                <p className="text-primary font-bold">${product.price}</p>
-                <p className="text-sm text-muted-foreground capitalize">
-                  {product.category}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+    </>
   )
 }
 
-export default ProductList 
+export default ProductList
