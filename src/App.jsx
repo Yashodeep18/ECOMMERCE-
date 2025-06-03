@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Suspense, lazy } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchProducts } from './features/products/productsSlice'
+import { useEffect } from 'react'
+
+// Lazy load components for better performance
+const ProductList = lazy(() => import('./pages/ProductList'))
+const ProductDetails = lazy(() => import('./pages/ProductDetails'))
+const AddProduct = lazy(() => import('./pages/AddProduct'))
+const EditProduct = lazy(() => import('./pages/EditProduct'))
+const Layout = lazy(() => import('./components/Layout'))
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch()
+  const status = useSelector(state => state.products.status)
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchProducts())
+    }
+  }, [status, dispatch])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<ProductList />} />
+          <Route path="product/:id" element={<ProductDetails />} />
+          <Route path="add" element={<AddProduct />} />
+          <Route path="edit/:id" element={<EditProduct />} />
+        </Route>
+      </Routes>
+    </Suspense>
   )
 }
 
-export default App
+export default App 
